@@ -60,6 +60,7 @@ data$DeviceType <- as.factor(data$DeviceType)
 data$Contact <- as.factor(data$Contact)
 data$differenceoffer <- as.numeric(data$differenceoffer)
 data$differencesession <- as.numeric(data$differencesession)
+
 #Subset Data set
 df <- subset(data, select=-c(RowId, UID, DisplayTime, LandingPage, FirstSessionStartTime, PreviousSessionStartTime, CurrentSessionStartTime, PreviousDisplayTime, CurrentURL, Country ))
 positive <- df[df$Contact==1,]
@@ -84,20 +85,15 @@ misclassificationError_tree <- mean(tree_prediction != train$Contact)
 print(paste('Accuracy Decision Tree',1-misclassificationError_tree))
 rpart.plot(tree)
 
-
-
 #Random Forest
 forest <- randomForest(Contact~., data=train, ntree=100)
 forest_prediction <- predict(forest, train, type ="class")
 misclassificationError_forest <- mean(forest_prediction != train$Contact)
 print(paste('Accuracy Random Forest',1-misclassificationError_forest))
 
-
 dfprediction <- predict(forest,df, type = "class")
 misclassificationError_df <- mean(dfprediction != df$Contact)
 print(paste('Accuracy Random Forest on df',1-misclassificationError_df))
-
-
 
 
 #Exploring Correlations
@@ -106,7 +102,6 @@ joint= CrossTable(data$TrafficSource,data$TotalVisits, prop.chisaq = FALSE)
 
 plot(data$TrafficSource, data$TotalVisits)
 plot(data$TrafficSource, data$differenceoffer)
-
 
 #simple model
 model <- glm(Contact~TotalVisits, family="binomial", data= df)
